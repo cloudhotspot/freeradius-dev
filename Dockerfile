@@ -16,9 +16,11 @@ RUN git clone --depth 1 --branch $FREERADIUS_VERSION $FREERADIUS_URL
 WORKDIR /usr/local/src/freeradius/freeradius-server
 
 # Add options
-ENV FREERADIUS_OPTS="--with-experimental-modules --with-jsonc-include-dir=/usr/include/json-c --with-jsonc-lib-dir=/usr/lib/x86_64-linux-gnu --with-redis-include-dir=/usr/include/hiredis --with-redis-lib-dir=/usr/lib/x86_64-linux-gnu"
-RUN sed "s|\(/configure \$(confflags)\)|\1 $FREERADIUS_OPTS |" debian/rules && \
-    fakeroot dpkg-buildpackage -b -uc && dpkg -i ../*freeradius*.deb
+#ENV FREERADIUS_OPTS="--with-experimental-modules --with-jsonc-include-dir=/usr/include/json-c --with-jsonc-lib-dir=/usr/lib/x86_64-linux-gnu --with-redis-include-dir=/usr/include/hiredis --with-redis-lib-dir=/usr/lib/x86_64-linux-gnu"
+#RUN sed "s|\(/configure \$(confflags)\)|\1 $FREERADIUS_OPTS |" debian/rules 
+
+ADD rules /usr/local/src/freeradius/freeradius-server/debian/rules 
+RUN fakeroot dpkg-buildpackage -b -uc && dpkg -i ../*freeradius*.deb
 
 EXPOSE 1812/udp 1813/udp
 CMD ["/usr/sbin/freeradius", "-f"]

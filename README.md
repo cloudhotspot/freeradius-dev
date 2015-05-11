@@ -4,10 +4,7 @@
  
  ## Introduction
  
- This repository contains a Dockerfile that is used to build the following Docker images:
- 
- * cloudhotspot/freeradius:3.0.8 - version 3.0.8 with default compilation options
- * cloudhotspot/freeradius:3.0.8-dev - version 3.0.8 with a number of additional extra modules including `rlm_rest` and `rlm_redis` (see below)
+ This repository contains a Dockerfile that is used to build the FreeRADIUS for development purposes:
  
 ## Configuring your Own Image
 
@@ -19,13 +16,15 @@ Modify the following line in the Dockerfile to change the compiled version:
 
 ### Compilation Options
 
-Modify the following line in the Dockerfile to adjust additional compilation options.
+The debian image is built using the `rules` file in the local folder.  The default `rules` file is located at `rules.default`.  
 
-No extra options:
+The local `rules` that is applied adds the following development module component flags to the `./configure` action:
 
-	ENV FREERADIUS_OPTS=
-
-Additional modules:
-
-	ENV FREERADIUS_OPTS="--with-experimental-modules --with-jsonc-include-dir=/usr/include/json-c --with-jsonc-lib-dir=/usr/lib/x86_64-linux-gnu --with-redis-include-dir=/usr/include/hiredis --with-redis-lib-dir=/usr/lib/x86_64-linux-gnu"
+	./configure $(confflags) \
+		... \
+		--with-experimental-modules \
+		--with-jsonc-include-dir=/usr/include/json-c \
+		--with-jsonc-lib-dir=/usr/lib/x86_64-linux-gnu \
+		--with-redis-include-dir=/usr/include/hiredis \
+		--with-redis-lib-dir=/usr/lib/x86_64-linux-gnu
    
